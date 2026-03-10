@@ -5,91 +5,68 @@ import './App.css'
 
 
 function App(){
-
-  // const new_var = "I want to learn react"
-  // return(
-  //   <div>
-  //     <h1>welcome to react</h1>
-  //     <p>i am new to react</p>
-  //     <p>{new_var}</p>
-  //   </div>
-  // );
-
-//   const[count,setcount] = useState(0);
-
-//   function increase() {
-//      setcount(count + 1)
-//   }
-
-//   function decrease(){
-//     if (count <= 0){
-//       count=0
-//       return
-//     }
-//           setcount(count - 1)
-
-//   }
-
-//   function reset(){
-//     setcount(0)
-//   }
-//   function increase_by5(){
-//     setcount(count+5)
-//   }
-//   return (
-//     <div>
-//       <h1>Counter APP</h1>
-//       <h2>{count}</h2>
-//       <button onClick={increase}>+</button>
-//       <button onClick={decrease}>-</button>
-//       <button onClick={reset}>reset</button>
-//       <button onClick={increase_by5}>+5</button>
-//     </div>
-//   )
-
-// creating todo-list application code
- const [task, setTask] = useState("");
+const [task, setTask] = useState("");
   const [tasks, setTasks] = useState([]);
 
   function addTask() {
     if (task === "") return;
-
-    setTasks([...tasks, task]);
+    setTasks([...tasks, { text: task, completed: false }]);
     setTask("");
   }
-  
+
   function deleteTask(indexToDelete) {
     const updatedTasks = tasks.filter((_, index) => index !== indexToDelete);
     setTasks(updatedTasks);
   }
 
+  function toggleComplete(indexToToggle) {
+    const updatedTasks = tasks.map((t, i) =>
+      i === indexToToggle ? { ...t, completed: !t.completed } : t
+    );
+    setTasks(updatedTasks);
+  }
 
   return (
-    <div>
-      <h1>Todo List</h1>
+    <div style={{ maxWidth: "400px", margin: "50px auto", fontFamily: "sans-serif" }}>
+      <h1 style={{ textAlign: "center" }}>Todo List</h1>
 
-      <input
-        type="text"
-        placeholder="Enter task..."
-        value={task}
-        onChange={(e) => setTask(e.target.value)}
-      />
+      <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+        <input
+          type="text"
+          placeholder="Enter task..."
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          style={{ flex: 1, padding: "8px" }}
+        />
+        <button onClick={addTask} style={{ padding: "8px 12px" }}>Add</button>
+      </div>
 
-      <button onClick={addTask}>Add</button>
-      <button onClick={removeTask}>Remove</button>
-
-
-      <ul>
+      <ul style={{ listStyle: "none", padding: 0 }}>
         {tasks.map((t, index) => (
-          <li key={index}>
-            {t} <button onClick={() => deleteTask(index)}>Delete</button>
+          <li
+            key={index}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "10px",
+              padding: "8px",
+              background: "#f0f0f0",
+              borderRadius: "5px",
+              textDecoration: t.completed ? "line-through" : "none",
+            }}
+          >
+            <span onClick={() => toggleComplete(index)} style={{ cursor: "pointer" }}>
+              {t.text}
+            </span>
+            <button onClick={() => deleteTask(index)} style={{ marginLeft: "10px" }}>
+              Delete
+            </button>
           </li>
         ))}
-      </ul> 
-      
+      </ul>
     </div>
   );
 }
-
 
 export default App;
