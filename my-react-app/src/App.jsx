@@ -15,37 +15,69 @@ function App(){
   //   </div>
   // );
 
-  const[count,setcount] = useState(0);
+//   const[count,setcount] = useState(0);
 
-  function increase() {
-     setcount(count + 1)
+//   function increase() {
+//      setcount(count + 1)
+//   }
+
+//   function decrease(){
+//     if (count <= 0){
+//       count=0
+//       return
+//     }
+//           setcount(count - 1)
+
+//   }
+
+//   function reset(){
+//     setcount(0)
+//   }
+//   function increase_by5(){
+//     setcount(count+5)
+//   }
+//   return (
+//     <div>
+//       <h1>Counter APP</h1>
+//       <h2>{count}</h2>
+//       <button onClick={increase}>+</button>
+//       <button onClick={decrease}>-</button>
+//       <button onClick={reset}>reset</button>
+//       <button onClick={increase_by5}>+5</button>
+//     </div>
+//   )
+
+// creating todo-list application code
+ const [task, setTask] = useState("");
+  const [tasks, setTasks] = useState([]);
+
+  function addTask() {
+    if (task === "") return;
+
+    setTasks([...tasks, task]);
+    setTask("");
   }
 
-  function decrease(){
-    if (count <= 0){
-      count=0
-      return
-    }
-          setcount(count - 1)
-
-  }
-
-  function reset(){
-    setcount(0)
-  }
-  function increase_by5(){
-    setcount(count+5)
-  }
   return (
     <div>
-      <h1>Counter APP</h1>
-      <h2>{count}</h2>
-      <button onClick={increase}>+</button>
-      <button onClick={decrease}>-</button>
-      <button onClick={reset}>reset</button>
-      <button onClick={increase_by5}>+5</button>
+      <h1>Todo List</h1>
+
+      <input
+        type="text"
+        placeholder="Enter task..."
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+      />
+
+      <button onClick={addTask}>Add</button>
+
+      <ul>
+        {tasks.map((t, index) => (
+          <li key={index}>{t}</li>
+        ))}
+      </ul>
     </div>
-  )
+  );
 }
 
 
