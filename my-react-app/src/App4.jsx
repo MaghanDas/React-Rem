@@ -1,21 +1,3 @@
-// Build a simple quiz with 5 hardcoded questions.
-//  Show one question at a time. User picks an answer, sees if they got it right, then moves to the next question. Show final score at the end.
-
-// Requirements
-// A Question component that receives question, options, and onAnswer as props
-// Track current question index and score in useState
-// When an answer is clicked, show green (correct) or red (wrong) feedback before moving on
-// When all questions are done, show a results screen with the score and a "Play Again" button that resets state
-// No API needed — hardcode your 5 questions as a JS array
-// components
-// props
-// useState
-// conditional rendering
-// event handling
-// Starter hint
-// Your state will be: currentIndex, score, selectedAnswer (null until clicked), isFinished. 
-// When an answer is clicked, set selectedAnswer, wait 1 second with setTimeout, then advance the index.
-
 import { useState } from "react";
 
 const questions = [
@@ -34,9 +16,26 @@ const questions = [
 function App() {
   const [isStarted, setIsStarted] = useState(false);
   const [currentIndex, setIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [currentAnswer, setAnswer] = useState(null);
+
+  function handleAnswer(option) {
+    setAnswer(option);
+
+    const correctAnswer = questions[currentIndex].answer;
+
+    if (option === correctAnswer) {
+      setScore((prev) => prev + 1);
+    }
+
+    setTimeout(() => {
+      setIndex((prev) => prev + 1);
+      setAnswer(null);
+    }, 1000);
+  }
 
   return (
-    <div>
+    <div style={{ textAlign: "center", marginTop: "50px" }}>
       <h1>Quiz App</h1>
 
       {!isStarted && (
@@ -45,8 +44,53 @@ function App() {
         </button>
       )}
 
-      {isStarted && (
-        <h2>{questions[currentIndex].question}</h2>
+      {isStarted && currentIndex < questions.length && (
+        <div>
+          <h2>{questions[currentIndex].question}</h2>
+
+          <ul style={{ listStyle: "none" }}>
+            {questions[currentIndex].options.map((option, index) => {
+              let bgColor = "";
+
+              if (currentAnswer) {
+                if (option === questions[currentIndex].answer) {
+                  bgColor = "lightgreen";
+                } else if (option === currentAnswer) {
+                  bgColor = "salmon";
+                }
+              }
+
+              return (
+                <li key={index} style={{ margin: "10px" }}>
+                  <button
+                    onClick={() => handleAnswer(option)}
+                    style={{ backgroundColor: bgColor, padding: "10px" }}
+                  >
+                    {option}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      {isStarted && currentIndex >= questions.length && (
+        <div>
+          <h2>Quiz Finished 🎉</h2>
+          <p>Your Score: {score}</p>
+
+          <button
+            onClick={() => {
+              setIndex(0);
+              setScore(0);
+              setIsStarted(false);
+              setAnswer(null);
+            }}
+          >
+            Play Again
+          </button>
+        </div>
       )}
     </div>
   );
